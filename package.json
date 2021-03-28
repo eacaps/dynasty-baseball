@@ -1,0 +1,32 @@
+{
+  "name": "dynasty-baseball",
+  "version": "0.0.0",
+  "description": "keeper baseball webapp",
+  "main": "index.js",
+  "scripts": {
+    "dev": "snowpack dev",
+    "build": "snowpack build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eacaps/dynasty-baseball.git"
+  },
+  "author": "eacaps",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/eacaps/dynasty-baseball/issues"
+  },
+  "homepage": "https://github.com/eacaps/dynasty-baseball#readme",
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.7",
+    "snowpack": "^3.0.11",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "styled-components": "^5.2.1"
+  }
+}
