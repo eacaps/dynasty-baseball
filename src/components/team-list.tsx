@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react"
 import TeamStore from "../stores/team-store"
 import { observer } from "mobx-react";
+import { Link } from "react-router-dom";
 
 const TeamList = () => {
   const teamStore = useContext(TeamStore)
@@ -8,7 +9,7 @@ const TeamList = () => {
   return (
       <>
         {teams.map(team =>(
-            <div id={'team-'+team.id}>{team.name}</div>
+            <Link to={'/team/'+team.id}>{team.name}</Link>
         ))}
       </>
   );
