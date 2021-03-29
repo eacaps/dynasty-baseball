@@ -9,7 +9,7 @@ const TeamList = () => {
   return (
       <>
         {teams.map(team =>(
-            <Link to={'/team/'+team.id}>{team.name}</Link>
+            <Link key={team.id} to={'/team/'+team.id}>{team.name}</Link>
         ))}
       </>
   );
