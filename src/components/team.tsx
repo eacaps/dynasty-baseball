@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useReducer, useState } from "react"
 import TeamStore from "../stores/team-store"
-import LineupStore from "../stores/lineup-store"
 import RosterStore from "../stores/roster-store"
 import {
     useParams
@@ -11,7 +10,6 @@ const Team = () => {
   let { id } = useParams();
 
   const rosterStore = useContext(RosterStore);
-  const lineupStore = useContext(LineupStore);
   const teamStore = useContext(TeamStore);
 
   const { teams } = teamStore;
@@ -30,10 +28,19 @@ const Team = () => {
   const { error, lineup , status } = state;
 
   useEffect(() => {
+    if (state.status === "saving") {
+      console.log('saving')
+      rosterStore.saveRoster(team.league_id,team.id,lineup).then(data => {
+        dispatch({ type: "RESOLVE", data });
+      })
+    }
+  }, [state.status]);
+
+  useEffect(() => {
     if (state.status === "loading") {
       let canceled = false;
 
-      lineupStore.getLineup(team.league_id,team.id)
+      rosterStore.unifyDraftRoster(team.league_id,team.id)
         .then(data => {
           if (canceled) return;
           dispatch({ type: "RESOLVE", data });
@@ -47,48 +54,33 @@ const Team = () => {
         canceled = true;
       };
     }
-  }, [state.status]);
+  }, []);
+
+  let buttons;
   
-  let roster = rosterStore.rosters.get(`${team.league_id}_${team.id}`)
-  let rosterDisplay = (
-    <div>
-        roster not found
-    </div>
-  );
+  let rosterDisplay =  (
+    <span>
+      {error && <span style={{ color: "red" }}>{error}</span>}
+      {status === "loading" && <span style={{ color: "blue" }}>Loading...</span>}
+      {status === "success" && <button onClick={() => dispatch({ type: "SAVE" })}>save</button>}
+    </span>
+  )
+
   if(lineup) {
-    const draftRoster = rosterStore.unifyDraftRoster(team.league_id,team.id,lineup);
-    roster = draftRoster;
-  }
-  if(roster) {
-     
+    buttons = (<span>{status === "success" && lineup.draft && <button onClick={() => dispatch({ type: "SAVE" })}>save</button>}</span>)
     rosterDisplay = (
         <div>
             {team.name + '-'+team.id}
-            <PlayerList players={roster.players}/>
+            <PlayerList players={lineup.players} editable={lineup.draft}/>
+           
         </div>
     );
   }
-
-  const espnLineup = (
-    <div>
-    {error && <span style={{ color: "red" }}>{error}</span>}
-    {/* <figure className="dog" onDoubleClick={() => dispatch({ type: "FETCH" })}>
-      {dog && <img src={dog} alt="doggo" />}
-    </figure> */}
-    {/* {lineup && <PlayerList players={lineup.players}/>} */}
-
-    {status === 'idle' && <button onClick={() => dispatch({ type: "FETCH" })}>
-      {status === "loading" ? "Fetching..." : "Fetch lineup!"}
-    </button>}
-    {/* <button onClick={() => dispatch({ type: "CANCEL" })}>Cancel</button> */}
-  </div>
-  )
   
   return (
       <>
-      <div>keeper lineup</div>
+      <div>keeper lineup{buttons}</div>
         {rosterDisplay}
-        {espnLineup}
       </>
   );
 }
@@ -117,13 +109,18 @@ function lineupReducer(state, event) {
           ...state,
           status: "idle"
         };
+      case "SAVE":
+        return {
+          ...state,
+          status: "saving"
+        };
       default:
         return state;
     }
   }
   
   const initialState = {
-    status: "idle",
+    status: "loading",
     lineup: null,
     error: null
   };

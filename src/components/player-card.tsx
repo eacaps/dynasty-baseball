@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 export interface PlayerCardProps {
     player: PlayerInfo;
+    editable?:boolean;
 }
 
 export interface PlayerCardState {
@@ -34,7 +35,7 @@ const AcqDate = styled.div`
   align-items: flex-end;
 `;
 
-export default class NameForm extends React.Component<PlayerCardProps,PlayerCardState> {
+export default class PlayerCard extends React.Component<PlayerCardProps,PlayerCardState> {
     constructor(props) {
       super(props);
       const value = props.player.keeperInfo?.keeperYears || '';
@@ -44,17 +45,28 @@ export default class NameForm extends React.Component<PlayerCardProps,PlayerCard
     }
   
     handleChange(event) {
-      this.setState({value: event.target.value});
+        const value = event.target.value;
+      this.setState({value});
+      const {keeperInfo} = this.props.player;
+      if(keeperInfo) {
+        keeperInfo.keeperYears = value;
+      } else {
+        this.props.player.keeperInfo = {
+          acquisitionDate: new Date().getTime(),
+          acquisitionType: 'MAGIC',
+          keeperYears: value
+        }
+      }
     }
 
   
     render() {
-        const {player} = this.props;
+        const {player,editable} = this.props;
       return (
           <Container>
               <Name>{player.name}</Name>
-              <AcqDate>{player.keeperInfo? new Date(player.keeperInfo.acquisitionDate).toDateString() : ''}</AcqDate>
-         <Input type="text" value={this.state.value} onChange={this.handleChange} />
+              <AcqDate>{player.keeperInfo? new Date(player.keeperInfo.acquisitionDate).toLocaleDateString() : ''}</AcqDate>
+                {editable ? <Input type="text" value={this.state.value} onChange={this.handleChange} /> : <div>{player.keeperInfo?.keeperYears}</div>}
           </Container>
       );
     }

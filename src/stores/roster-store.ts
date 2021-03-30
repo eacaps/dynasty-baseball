@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import EspnLoader from "../services/espn-service";
-import { Lineup } from "./lineup-store";
+import { deepCopy, wait } from "../utils/utils";
 
 export interface Roster {
   league_id: string;
@@ -23,16 +23,46 @@ export interface KeeperInfo {
     extended?:boolean;
 }
 
+export interface Lineup {
+    league_id: string;
+    team_id: string;
+    date: number;
+    players: PlayerInfo[];
+  }
+
 class RosterStore {
+    service :EspnLoader;
   constructor() {
       this.rosters = new Map();
+      this.service = new EspnLoader();
+      this.lineups = new Map();
   }
 
   rosters: Map<string,Roster>;
+  lineups: Map<string,Lineup>;
 
-  unifyDraftRoster(league_id:string,team_id:string,lineup:Lineup):Roster {
-      const key = `${league_id}_${team_id}`;
-      const roster = this.rosters.get(key);
+  getLineup = async (league_id:string, team_id:string) => {
+    const key = `${league_id}_${team_id}`;
+    if(this.lineups.get(key))
+       return deepCopy(this.lineups.get(key));
+    const data = await this.service.loadPlayersForTeam(league_id, team_id);
+    const lineup = {
+      league_id,team_id,date:new Date().getTime(),players:data
+    };
+    this.lineups.set(key, lineup);
+    return deepCopy(lineup);
+  }
+
+  getRoster = async (league_id:string, team_id:string) => {
+    const key = `${league_id}_${team_id}`;
+    const roster = this.rosters.get(key);
+    return roster;
+  }
+
+  unifyDraftRoster = async (league_id:string,team_id:string):Promise<Roster> => {
+      await wait(1000);
+      const lineup = await this.getLineup(league_id, team_id);
+      const roster = await this.getRoster(league_id, team_id);
       if(roster) {
 
       } else {
@@ -45,6 +75,12 @@ class RosterStore {
           draft: true,
           players:lineup.players
       }
+  }
+
+  saveRoster = async(league_id:string, team_id:string, roster:Roster): Promise<Roster> => {
+      console.log(roster);
+      roster.draft = false;
+      return roster;
   }
 }
 

@@ -4,13 +4,14 @@ import PlayerCard from './player-card';
 
 export interface PlayerListProps {
     players: PlayerInfo[]
+    editable?: boolean;
 };
 
-const PlayerList = ({players}:PlayerListProps) => {
+const PlayerList = ({players,editable}:PlayerListProps) => {
   return (
       <>
         {players.map(player =>(
-            <PlayerCard key={player.id} player={player}/>
+            <PlayerCard key={player.id} player={player} editable={editable}/>
         ))}
       </>
   );
