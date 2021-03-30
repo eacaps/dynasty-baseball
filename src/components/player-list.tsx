@@ -14,7 +14,7 @@ const PlayerList = ({players}:PlayerListProps) => {
   return (
       <>
         {playerlist.map(player =>(
-            <div>{player.name}</div>
+            <div key={player.id}>{player.name}</div>
         ))}
       </>
   );
