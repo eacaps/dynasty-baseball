@@ -1,24 +1,20 @@
-import React, { useContext, useState } from "react"
-import TeamStore from "../stores/team-store"
-import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
-import PlayerStore from "../stores/player-store";
+import React from "react"
+import { PlayerInfo } from "../stores/roster-store";
+import PlayerCard from './player-card';
 
 export interface PlayerListProps {
-    players: string[]
+    players: PlayerInfo[]
 };
 
 const PlayerList = ({players}:PlayerListProps) => {
-  const playerStore = useContext(PlayerStore)
-  const playerlist = playerStore.players.filter(player => players.includes(player.id))
   return (
       <>
-        {playerlist.map(player =>(
-            <div key={player.id}>{player.name}</div>
+        {players.map(player =>(
+            <PlayerCard key={player.id} player={player}/>
         ))}
       </>
   );
 }
 
 
-export default observer(PlayerList);
+export default PlayerList;

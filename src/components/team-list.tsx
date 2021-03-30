@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react"
 import TeamStore from "../stores/team-store"
-import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 
 const TeamList = () => {
@@ -16,4 +15,4 @@ const TeamList = () => {
 }
 
 
-export default observer(TeamList);
+export default TeamList;

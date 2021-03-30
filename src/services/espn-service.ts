@@ -1,5 +1,5 @@
 import data from '../../public/data/backham_bombers_2021_03_28.json';
-import { Player } from '../stores/player-store';
+import { PlayerInfo } from '../stores/roster-store';
 import { Team } from '../stores/team-store';
 
 export default class EspnLoader {
@@ -19,14 +19,18 @@ export default class EspnLoader {
         return teams;
     }
 
-    async loadPlayersForTeam(id:string): Promise<Player[]> {
-        const team = this.response.teams.find(team => {return team.id == +id})
+    async loadPlayersForTeam(league_id:string, team_id:string): Promise<PlayerInfo[]> {
+        const team = this.response.teams.find(team => {return team.id == +team_id})
         if(!team) return [];
         const players = team.roster.entries.map(playerEntry => {
+            const {acquisitionDate, acquisitionType} = playerEntry;
             const {id,player} = playerEntry.playerPoolEntry;
             return {
                 id:id+'',
-                name:player.fullName
+                name:player.fullName,
+                keeperInfo: {
+                    acquisitionDate,acquisitionType
+                }
             }
         })
         return players;
