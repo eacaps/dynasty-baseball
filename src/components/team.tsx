@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useReducer, useState } from "react"
+import React, { useContext, useEffect, useMemo, useReducer, useState } from "react"
 import TeamStore from "../stores/team-store"
-import RosterStore from "../stores/roster-store"
+import RosterStore, { Roster } from "../stores/roster-store"
 import {
     useParams
   } from "react-router-dom";
   import PlayerList from './player-list';
+  import Years from './years'
+import PlayerCard from "./player-card";
 
 const Team = () => {
   let { id } = useParams();
@@ -26,6 +28,9 @@ const Team = () => {
 
   const [state, dispatch] = useReducer(lineupReducer, initialState);
   const { error, lineup , status } = state;
+  
+  
+  const [years, setYears] = useState(computeYears(lineup));
 
   useEffect(() => {
     if (state.status === "saving") {
@@ -71,8 +76,15 @@ const Team = () => {
     rosterDisplay = (
         <div>
             {team.name + '-'+team.id}
-            <PlayerList players={lineup.players} editable={lineup.draft}/>
-           
+            {/* <PlayerList players={lineup.players} editable={lineup.draft}/> */}
+            {lineup.players.map(player =>(
+              <PlayerCard key={player.id} player={player} editable={lineup.draft}
+                onUpdate={
+                  () => setYears(computeYears(lineup))
+                }
+              />
+            ))}
+            <Years players={lineup.players}/>
         </div>
     );
   }
@@ -83,6 +95,17 @@ const Team = () => {
         {rosterDisplay}
       </>
   );
+}
+
+function computeYears(lineup?:Roster):number {
+  if(!lineup) return 0;
+  let total = 0;
+  for(const player of lineup.players) {
+    if(player.keeperInfo && player.keeperInfo.keeperYears) {
+      total += +player.keeperInfo.keeperYears
+    }
+  }
+  return total;
 }
 
 function lineupReducer(state, event) {

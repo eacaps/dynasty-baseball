@@ -5,6 +5,7 @@ import styled from 'styled-components';
 export interface PlayerCardProps {
     player: PlayerInfo;
     editable?:boolean;
+    onUpdate?: ()=>void;
 }
 
 export interface PlayerCardState {
@@ -50,6 +51,7 @@ export default class PlayerCard extends React.Component<PlayerCardProps,PlayerCa
       const {keeperInfo} = this.props.player;
       if(keeperInfo) {
         keeperInfo.keeperYears = value;
+        this.props.player.keeperInfo = Object.assign({}, keeperInfo);
       } else {
         this.props.player.keeperInfo = {
           acquisitionDate: new Date().getTime(),
@@ -57,6 +59,7 @@ export default class PlayerCard extends React.Component<PlayerCardProps,PlayerCa
           keeperYears: value
         }
       }
+      this.props.onUpdate();
     }
 
   
