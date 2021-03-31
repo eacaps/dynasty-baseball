@@ -5,7 +5,6 @@ import {
     useParams
   } from "react-router-dom";
   import PlayerList from './player-list';
-  import Years from './years'
 import PlayerCard from "./player-card";
 
 const Team = () => {
@@ -84,7 +83,7 @@ const Team = () => {
                 }
               />
             ))}
-            <Years players={lineup.players}/>
+            <div>Years:{years}</div>
         </div>
     );
   }
