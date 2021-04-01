@@ -47,6 +47,7 @@ const Team = () => {
       rosterStore.unifyDraftRoster(team.league_id,team.id)
         .then(data => {
           if (canceled) return;
+          setYears(computeYears(data))
           dispatch({ type: "RESOLVE", data });
         })
         .catch(error => {
@@ -75,22 +76,21 @@ const Team = () => {
     rosterDisplay = (
         <div>
             {team.name + '-'+team.id}
-            {/* <PlayerList players={lineup.players} editable={lineup.draft}/> */}
             {lineup.players.map(player =>(
-              <PlayerCard key={player.id} player={player} editable={lineup.draft}
+              <PlayerCard key={player.id} player={player} editable={lineup.draft && !player.keeperInfo?.keeperYears}
                 onUpdate={
                   () => setYears(computeYears(lineup))
                 }
               />
             ))}
             <div>Years:{years}</div>
+            {buttons}
         </div>
     );
   }
   
   return (
       <>
-      <div>keeper lineup{buttons}</div>
         {rosterDisplay}
       </>
   );

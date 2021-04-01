@@ -21,19 +21,23 @@ const Name = styled.div`
   height: 2rem;
   color: #a51d49;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 `;
 
 const Input = styled.input`
 width:2rem;
 `;
+const Years = styled.div`
+width:2rem;
+display: flex;
+align-items: center;
+`;
 
 const AcqDate = styled.div`
   width: 10rem;
   height: 2rem;
-  text-align: center;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 `;
 
 export default class PlayerCard extends React.Component<PlayerCardProps,PlayerCardState> {
@@ -69,7 +73,7 @@ export default class PlayerCard extends React.Component<PlayerCardProps,PlayerCa
           <Container>
               <Name>{player.name}</Name>
               <AcqDate>{player.keeperInfo? new Date(player.keeperInfo.acquisitionDate).toLocaleDateString() : ''}</AcqDate>
-                {editable ? <Input type="text" value={this.state.value} onChange={this.handleChange} /> : <div>{player.keeperInfo?.keeperYears}</div>}
+                {editable ? <Input type="text" value={this.state.value} onChange={this.handleChange} /> : <Years>{player.keeperInfo?.keeperYears}</Years>}
           </Container>
       );
     }
