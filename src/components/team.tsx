@@ -34,7 +34,7 @@ const Team = () => {
   useEffect(() => {
     if (state.status === "saving") {
       console.log('saving')
-      rosterStore.saveRoster(team.league_id,team.id,lineup).then(data => {
+      rosterStore.saveRoster(lineup).then(data => {
         dispatch({ type: "RESOLVE", data });
       })
     }

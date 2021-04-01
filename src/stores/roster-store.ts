@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import EspnLoader from "../services/espn-service";
+import RosterService from "../services/roster-service";
 import { deepCopy, wait } from "../utils/utils";
 
 export interface Roster {
@@ -31,10 +32,12 @@ export interface Lineup {
   }
 
 class RosterStore {
-    service :EspnLoader;
+    espnService :EspnLoader;
+    rosterService: RosterService;
   constructor() {
       this.rosters = new Map();
-      this.service = new EspnLoader();
+      this.espnService = new EspnLoader();
+      this.rosterService = new RosterService();
       this.lineups = new Map();
   }
 
@@ -45,7 +48,7 @@ class RosterStore {
     const key = `${league_id}_${team_id}`;
     if(this.lineups.get(key))
        return deepCopy(this.lineups.get(key));
-    const data = await this.service.loadPlayersForTeam(league_id, team_id);
+    const data = await this.espnService.loadPlayersForTeam(league_id, team_id);
     const lineup = {
       league_id,team_id,date:new Date().getTime(),players:data
     };
@@ -55,7 +58,7 @@ class RosterStore {
 
   getRoster = async (league_id:string, team_id:string) => {
     const key = `${league_id}_${team_id}`;
-    const roster = this.rosters.get(key);
+    const roster = await this.rosterService.loadRoster(league_id, team_id);
     return roster;
   }
 
@@ -63,22 +66,33 @@ class RosterStore {
       await wait(1000);
       const lineup = await this.getLineup(league_id, team_id);
       const roster = await this.getRoster(league_id, team_id);
+      const lineupPlayers = lineup && lineup.players ? lineup.players : [];
+      let players = lineupPlayers;
       if(roster) {
-
-      } else {
-
+        for(const rosterPlayer of roster.players) {
+          let foundLineupPlayer;
+          for(const lineupPlayer of lineupPlayers) {
+            if(lineupPlayer.id === rosterPlayer.id) {
+              foundLineupPlayer = lineupPlayer;
+            }
+          }
+          if(foundLineupPlayer) {
+            foundLineupPlayer.keeperInfo = rosterPlayer.keeperInfo;
+          }
+        }
       }
       return {
           created_at: new Date().getTime(),
           league_id,
           team_id,
           draft: true,
-          players:lineup.players
+          players
       }
   }
 
-  saveRoster = async(league_id:string, team_id:string, roster:Roster): Promise<Roster> => {
+  saveRoster = async(roster:Roster): Promise<Roster> => {
       console.log(roster);
+      await this.rosterService.saveRoster(roster);
       roster.draft = false;
       return roster;
   }
