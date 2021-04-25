@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import EspnLoader from "../services/espn-service";
+import LineupService from "../services/lineup-service";
 
 export interface Player {
   id: string;

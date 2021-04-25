@@ -50,7 +50,7 @@ export default class PlayerCard extends React.Component<PlayerCardProps,PlayerCa
     }
   
     handleChange(event) {
-        const value = event.target.value;
+      const value = event.target.value;
       this.setState({value});
       const {keeperInfo} = this.props.player;
       if(keeperInfo) {
