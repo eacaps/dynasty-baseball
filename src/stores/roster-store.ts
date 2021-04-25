@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import EspnLoader from "../services/espn-service";
+import LineupService from "../services/lineup-service";
 import RosterService from "../services/roster-service";
 import { deepCopy, wait } from "../utils/utils";
 
@@ -8,6 +8,9 @@ export interface Roster {
   team_id: string;
   created_at: number;
   players: PlayerInfo[];
+}
+
+export interface DraftRoster extends Roster {
   draft?:boolean;
 }
 
@@ -15,6 +18,7 @@ export interface PlayerInfo {
     id: string;
     name: string;
     keeperInfo?: KeeperInfo;
+    draft?: boolean
 }
 
 export interface KeeperInfo {
@@ -32,11 +36,11 @@ export interface Lineup {
   }
 
 class RosterStore {
-    espnService :EspnLoader;
+    lineupService :LineupService;
     rosterService: RosterService;
   constructor() {
       this.rosters = new Map();
-      this.espnService = new EspnLoader();
+      this.lineupService = new LineupService();
       this.rosterService = new RosterService();
       this.lineups = new Map();
   }
@@ -48,7 +52,7 @@ class RosterStore {
     const key = `${league_id}_${team_id}`;
     if(this.lineups.get(key))
        return deepCopy(this.lineups.get(key));
-    const data = await this.espnService.loadPlayersForTeam(league_id, team_id);
+    const data = await this.lineupService.loadPlayersForTeam(league_id, team_id);
     const lineup = {
       league_id,team_id,date:new Date().getTime(),players:data
     };
@@ -62,12 +66,13 @@ class RosterStore {
     return roster;
   }
 
-  unifyDraftRoster = async (league_id:string,team_id:string):Promise<Roster> => {
+  unifyDraftRoster = async (league_id:string,team_id:string):Promise<DraftRoster> => {
       await wait(1000);
       const lineup = await this.getLineup(league_id, team_id);
       const roster = await this.getRoster(league_id, team_id);
       const lineupPlayers = lineup && lineup.players ? lineup.players : [];
       let players = lineupPlayers;
+      players.forEach(player => player.draft = true)
       if(roster) {
         for(const rosterPlayer of roster.players) {
           let foundLineupPlayer;
@@ -78,6 +83,9 @@ class RosterStore {
           }
           if(foundLineupPlayer) {
             foundLineupPlayer.keeperInfo = rosterPlayer.keeperInfo;
+            if(foundLineupPlayer.keeperInfo?.keeperYears) {
+              foundLineupPlayer.draft = false;
+            }
           }
         }
       }
@@ -93,7 +101,7 @@ class RosterStore {
   saveRoster = async(roster:Roster): Promise<Roster> => {
       console.log(roster);
       await this.rosterService.saveRoster(roster);
-      roster.draft = false;
+      // roster.draft = false;
       return roster;
   }
 }

@@ -51,8 +51,9 @@ const Team = () => {
           dispatch({ type: "RESOLVE", data });
         })
         .catch(error => {
+          console.error(error.message)
           if (canceled) return;
-          dispatch({ type: "REJECT", error });
+          dispatch({ type: "REJECT", error:error.message });
         });
 
       return () => {
@@ -65,9 +66,9 @@ const Team = () => {
   
   let rosterDisplay =  (
     <span>
-      {error && <span style={{ color: "red" }}>{error}</span>}
-      {status === "loading" && <span style={{ color: "blue" }}>Loading...</span>}
-      {status === "success" && <button onClick={() => dispatch({ type: "SAVE" })}>save</button>}
+      {error && <span style={{ color: "red" }}>Error loading players</span>}
+      {/* {status === "loading" && <span style={{ color: "blue" }}>Loading...</span>}
+      {status === "success" && <button onClick={() => dispatch({ type: "SAVE" })}>save</button>} */}
     </span>
   )
 
@@ -77,7 +78,7 @@ const Team = () => {
         <div>
             {team.name + '-'+team.id}
             {lineup.players.map(player =>(
-              <PlayerCard key={player.id} player={player} editable={lineup.draft && !player.keeperInfo?.keeperYears}
+              <PlayerCard key={player.id} player={player} editable={lineup.draft && player.draft /*&& !player.keeperInfo?.keeperYears*/}
                 onUpdate={
                   () => setYears(computeYears(lineup))
                 }

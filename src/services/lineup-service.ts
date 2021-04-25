@@ -1,26 +1,23 @@
-import data from '../../public/data/backham_bombers_2021_03_28.json';
 import { PlayerInfo } from '../stores/roster-store';
 import { Team } from '../stores/team-store';
+import EspnFileClient from './espn/espn-file-client';
+import EspnRemoteClient from './espn/espn-remote-client';
 
-export default class EspnLoader {
-    response:EspnRosterForTeamIdResponse;
+export interface LineupClient {
+    getEspnLineup(league_id:string, team_id:string): Promise<EspnRosterForTeamIdResponse>;
+}
+
+export default class LineupService {
+    client: LineupClient;
+
     constructor() {
-        this.response = data as EspnRosterForTeamIdResponse;
-    }
-
-    getTeams(): Team[] {
-        const teams = this.response.teams.map(team => {
-            return {
-                league_id: this.response.id+'',
-                id: team.id+'',
-                name: team.id+''
-            }
-        })
-        return teams;
+        this.client = new EspnFileClient();
+        // this.client = new EspnRemoteClient();
     }
 
     async loadPlayersForTeam(league_id:string, team_id:string): Promise<PlayerInfo[]> {
-        const team = this.response.teams.find(team => {return team.id == +team_id})
+        const espnLineup = await this.client.getEspnLineup(league_id,team_id);
+        const team = espnLineup.teams.find(team => {return team.id == +team_id})
         if(!team) return [];
         const players = team.roster.entries.map(playerEntry => {
             const {acquisitionDate, acquisitionType} = playerEntry;
