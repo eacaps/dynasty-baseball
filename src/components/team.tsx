@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useMemo, useReducer, useState } from "react"
 import TeamStore from "../stores/team-store"
-import RosterStore, { Roster } from "../stores/roster-store"
+import RosterStore, { Roster,DraftRoster } from "../stores/roster-store"
 import {
     useParams
   } from "react-router-dom";
-  import PlayerList from './player-list';
 import PlayerCard from "./player-card";
+import { computeYears } from "../services/roster-service";
+
+interface Params {
+  id?: string;
+}
 
 const Team = () => {
-  let { id } = useParams();
+  let { id } = useParams<Params>();
 
   const rosterStore = useContext(RosterStore);
   const teamStore = useContext(TeamStore);
@@ -34,7 +38,7 @@ const Team = () => {
   useEffect(() => {
     if (state.status === "saving") {
       console.log('saving')
-      rosterStore.saveRoster(lineup).then(data => {
+      rosterStore.saveRoster(lineup!).then(data => {
         dispatch({ type: "RESOLVE", data });
       })
     }
@@ -62,7 +66,7 @@ const Team = () => {
     }
   }, []);
 
-  let buttons;
+  let buttons,prev;
   
   let rosterDisplay =  (
     <span>
@@ -73,12 +77,15 @@ const Team = () => {
   )
 
   if(lineup) {
-    buttons = (<span>{status === "success" && lineup.draft && <button onClick={() => dispatch({ type: "SAVE" })}>save</button>}</span>)
+    buttons = (<div>{status === "success" && lineup.draft && <button onClick={() => dispatch({ type: "SAVE" })}>save</button>}</div>)
+    if(lineup.revision) {
+      prev = (<div><a href={`#/team/${team.id}/${(lineup.revision -1)}`}>Previous Roster</a></div>)
+    }
     rosterDisplay = (
         <div>
             {team.name + '-'+team.id}
             {lineup.players.map(player =>(
-              <PlayerCard key={player.id} player={player} editable={lineup.draft && player.draft /*&& !player.keeperInfo?.keeperYears*/}
+              <PlayerCard key={player.id} player={player} editable={lineup.draft && player.draft}
                 onUpdate={
                   () => setYears(computeYears(lineup))
                 }
@@ -86,6 +93,7 @@ const Team = () => {
             ))}
             <div>Years:{years}</div>
             {buttons}
+            {prev}
         </div>
     );
   }
@@ -97,24 +105,8 @@ const Team = () => {
   );
 }
 
-function computeYears(lineup?:Roster):number {
-  if(!lineup) return 0;
-  let total = 0;
-  for(const player of lineup.players) {
-    if(player.keeperInfo && player.keeperInfo.keeperYears) {
-      total += +player.keeperInfo.keeperYears
-    }
-  }
-  return total;
-}
-
-function lineupReducer(state, event) {
+function lineupReducer(state:TeamState, event:{type:string,data?:DraftRoster,error?:string}) {
     switch (event.type) {
-      case "FETCH":
-        return {
-          ...state,
-          status: "loading"
-        };
       case "RESOLVE":
         return {
           ...state,
@@ -127,11 +119,6 @@ function lineupReducer(state, event) {
           status: "failure",
           error: event.error
         };
-      case "CANCEL":
-        return {
-          ...state,
-          status: "idle"
-        };
       case "SAVE":
         return {
           ...state,
@@ -142,10 +129,16 @@ function lineupReducer(state, event) {
     }
   }
   
-  const initialState = {
+interface TeamState {
+  status: string;
+  lineup?: DraftRoster,
+  error?: string
+}
+
+  const initialState:TeamState = {
     status: "loading",
-    lineup: null,
-    error: null
+    lineup: undefined,
+    error: undefined
   };
 
 export default Team;
