@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import LineupService from "../services/lineup-service";
+import TeamsService from "../services/team-service";
 
 export interface Team {
   id: string;
@@ -8,12 +8,17 @@ export interface Team {
 }
 
 class TeamStore {
+  service = new TeamsService();
   constructor() {
   }
 
-  teams: Team[] = [
-      {id:'7', league_id:'68018', name: 'BACKHAM Bombers'}
-  ]
+  async getTeams():Promise<Team[]> {
+    const teams = await this.service.getTeams('68018');
+    this.teams = teams;
+    return teams;
+  }
+
+  teams: Team[] = []
 }
 
 export default createContext(new TeamStore())

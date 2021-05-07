@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react"
 import TeamList from "./components/team-list";
-import Team from './components/team';
+import TeamComponent from './components/team';
 import Roster from './components/team-roster';
 import Home from './components/home';
 import styled from 'styled-components';
@@ -12,18 +12,22 @@ import {
     Route,
     Link
   } from "react-router-dom";
+  import TeamStore, { Team } from "./stores/team-store"
 
 const Main = styled.div`
 font-family: Courier New;
 `;
 
 const App = () => {
-  return (
-    <Router>
-      <Main>
-        <Header />
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+  const teamStore = useContext(TeamStore)
+  const [teams,setTeams]:[Team[] | undefined,any] = useState(undefined);
+  
+  useEffect(() => {
+    teamStore.getTeams().then(team_list => {
+      setTeams(team_list);
+    })
+  },[]);
+  let content = (
         <Switch>
           <Route path="/teams">
             <TeamList/>
@@ -32,12 +36,28 @@ const App = () => {
             <Roster />
           </Route>
           <Route path="/team/:id">
-            <Team />
+            <TeamComponent />
           </Route>
           <Route path="/">
             <Home />
           </Route>
         </Switch>
+  )
+  if(!teams) {
+    content = (
+      <>
+        loading
+      </>
+    )
+  };
+
+  return (
+    <Router>
+      <Main>
+        <Header />
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        {content}
     </Main>
     </Router>
   );
