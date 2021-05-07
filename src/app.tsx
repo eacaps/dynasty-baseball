@@ -1,6 +1,7 @@
 import React from "react";
 import TeamList from "./components/team-list";
 import Team from './components/team';
+import Roster from './components/team-roster';
 import Home from './components/home';
 import styled from 'styled-components';
 import Header from './components/header';
@@ -26,6 +27,9 @@ const App = () => {
         <Switch>
           <Route path="/teams">
             <TeamList/>
+          </Route>
+          <Route path="/team/:id/:rev">
+            <Roster />
           </Route>
           <Route path="/team/:id">
             <Team />

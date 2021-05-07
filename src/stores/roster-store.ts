@@ -8,7 +8,12 @@ export interface Roster {
   team_id: string;
   created_at: number;
   players: PlayerInfo[];
+  revision: number;
 }
+ export interface RosterInfo {
+   roster?: Roster;
+   revision : number;
+ }
 
 export interface DraftRoster extends Roster {
   draft?:boolean;
@@ -60,16 +65,17 @@ class RosterStore {
     return deepCopy(lineup);
   }
 
-  getRoster = async (league_id:string, team_id:string) => {
+  getRoster = async (league_id:string, team_id:string, rev_id?:number) => {
     const key = `${league_id}_${team_id}`;
-    const roster = await this.rosterService.loadRoster(league_id, team_id);
+    const roster = await this.rosterService.loadRoster(league_id, team_id, rev_id);
     return roster;
   }
 
   unifyDraftRoster = async (league_id:string,team_id:string):Promise<DraftRoster> => {
       await wait(1000);
       const lineup = await this.getLineup(league_id, team_id);
-      const roster = await this.getRoster(league_id, team_id);
+      const rosterInfo = await this.getRoster(league_id, team_id);
+      const roster = rosterInfo.roster;
       const lineupPlayers = lineup && lineup.players ? lineup.players : [];
       let players = lineupPlayers;
       players.forEach(player => player.draft = true)
@@ -94,14 +100,16 @@ class RosterStore {
           league_id,
           team_id,
           draft: true,
-          players
+          players,
+          revision: rosterInfo.revision
       }
   }
 
-  saveRoster = async(roster:Roster): Promise<Roster> => {
+  saveRoster = async(roster:Roster): Promise<DraftRoster> => {
       console.log(roster);
-      await this.rosterService.saveRoster(roster);
+      const newRevision = await this.rosterService.saveRoster(roster);
       // roster.draft = false;
+      if(newRevision) roster.revision = newRevision;
       return roster;
   }
 }

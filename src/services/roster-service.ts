@@ -1,4 +1,4 @@
-import { Roster } from "../stores/roster-store";
+import { Roster, RosterInfo } from "../stores/roster-store";
 import LocalRosterClient from "./roster/local-roster-client";
 
 export interface RosterClient {
@@ -23,9 +23,10 @@ export default class RosterService {
         this.client = new LocalRosterClient();
     }
 
-    async loadRoster(league_id:string, team_id:string): Promise<Roster | undefined> {
-        const response = await this.client.getRoster(league_id,team_id);
-        return response.roster;
+    async loadRoster(league_id:string, team_id:string, rev_id?:number): Promise<RosterInfo> {
+        const response = await this.client.getRoster(league_id,team_id,rev_id);
+        const {roster,revision} = response;
+        return {roster,revision};
     }
 
     async saveRoster(roster:Roster): Promise<number | undefined> {
@@ -36,6 +37,17 @@ export default class RosterService {
         roster.players.forEach(player => player.keeperInfo?.keeperYears && delete player.draft)
         const rosterResponse = await this.client.saveRoster(roster, revision);
         if(!rosterResponse.success) return;
-        return now;
+        return rosterResponse.revision;
     }
 }
+
+export function computeYears(lineup?:Roster):number {
+    if(!lineup) return 0;
+    let total = 0;
+    for(const player of lineup.players) {
+      if(player.keeperInfo && player.keeperInfo.keeperYears) {
+        total += +player.keeperInfo.keeperYears
+      }
+    }
+    return total;
+  }
