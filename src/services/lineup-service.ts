@@ -11,8 +11,8 @@ export default class LineupService {
     client: LineupClient;
 
     constructor() {
-        this.client = new EspnFileClient();
-        // this.client = new EspnRemoteClient();
+        // this.client = new EspnFileClient();
+        this.client = new EspnRemoteClient();
     }
 
     async loadPlayersForTeam(league_id:string, team_id:string): Promise<PlayerInfo[]> {
