@@ -1,5 +1,6 @@
 import { Roster, RosterInfo } from "../stores/roster-store";
 import LocalRosterClient from "./roster/local-roster-client";
+import RemoteRosterClient from "./roster/remote-roster-client";
 
 export interface RosterClient {
     getRoster(league_id:string, team_id:string, rev_id?:number):Promise<GetRosterResponse>;
@@ -20,7 +21,8 @@ export default class RosterService {
     client:RosterClient;
 
     constructor() {
-        this.client = new LocalRosterClient();
+        // this.client = new LocalRosterClient();
+        this.client = new RemoteRosterClient();
     }
 
     async loadRoster(league_id:string, team_id:string, rev_id?:number): Promise<RosterInfo> {
