@@ -39,6 +39,7 @@ const Team = () => {
     if (state.status === "saving") {
       console.log('saving')
       rosterStore.saveRoster(lineup!).then(data => {
+        // TODO handle bad saves!
         dispatch({ type: "RESOLVE", data });
       })
     }
