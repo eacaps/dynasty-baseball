@@ -1,0 +1,165 @@
+{
+    "gameId": 2,
+    "id": 68018,
+    "members": [
+        {
+            "displayName": "eac14n",
+            "id": "{156AF54C-0D7A-457B-B1CE-FBB97DC61D42}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "metsfan8584",
+            "id": "{1806278E-6B83-4347-A913-B04BEDD19A05}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "Rebolting",
+            "id": "{504357FC-4B8A-47E5-A043-B20FBE78C3D3}",
+            "isLeagueManager": true
+        },
+        {
+            "displayName": "yorktowncc",
+            "id": "{6D022F35-B809-4C15-9791-264799D876A0}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "berto714",
+            "id": "{92E370DD-C3D5-4420-9550-3FFEF4C19292}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "kdugan26",
+            "id": "{C0BD666C-3CD5-4089-B0AD-429AC08B5B17}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "slydog384",
+            "id": "{C99BC345-51EB-11D3-BE5B-00A0C9E5C87D}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "thirdgenrx7",
+            "id": "{D3E4B15C-7EC9-4AB5-9CA3-4E35A16ACE45}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "timothy.n.john",
+            "id": "{D41136E6-6CDC-4C80-87F3-18FDC1038F4A}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "DrKickbut",
+            "id": "{DEDC4127-FD7C-4E16-8F99-237E254B721B}",
+            "isLeagueManager": false
+        },
+        {
+            "displayName": "SethLEdwards",
+            "id": "{E427F145-0CDC-4689-A24D-2B2751F56F88}",
+            "isLeagueManager": false
+        }
+    ],
+    "scoringPeriodId": 36,
+    "seasonId": 2021,
+    "segmentId": 0,
+    "settings": {
+        "name": "Arlington Baseball Keeper"
+    },
+    "status": {
+        "currentMatchupPeriod": 5,
+        "isActive": true,
+        "latestScoringPeriod": 36
+    },
+    "teams": [
+        {
+            "abbrev": "SB",
+            "id": 1,
+            "location": "Shake and",
+            "nickname": "Bake",
+            "owners": [
+                "{C99BC345-51EB-11D3-BE5B-00A0C9E5C87D}"
+            ]
+        },
+        {
+            "abbrev": "CHAS",
+            "id": 2,
+            "location": "i have heard of",
+            "nickname": "bad titties",
+            "owners": [
+                "{D3E4B15C-7EC9-4AB5-9CA3-4E35A16ACE45}"
+            ]
+        },
+        {
+            "abbrev": "BRAD",
+            "id": 3,
+            "location": "Team",
+            "nickname": "Bradley",
+            "owners": [
+                "{6D022F35-B809-4C15-9791-264799D876A0}"
+            ]
+        },
+        {
+            "abbrev": "GOON",
+            "id": 4,
+            "location": "Booty",
+            "nickname": "Goons",
+            "owners": [
+                "{92E370DD-C3D5-4420-9550-3FFEF4C19292}",
+                "{DEDC4127-FD7C-4E16-8F99-237E254B721B}"
+            ]
+        },
+        {
+            "abbrev": "RAIN",
+            "id": 5,
+            "location": "u evr heard",
+            "nickname": "of bad titties?",
+            "owners": [
+                "{1806278E-6B83-4347-A913-B04BEDD19A05}"
+            ]
+        },
+        {
+            "abbrev": "CRAP",
+            "id": 6,
+            "location": "David Eckstein",
+            "nickname": "Scrappy Hour",
+            "owners": [
+                "{D41136E6-6CDC-4C80-87F3-18FDC1038F4A}"
+            ]
+        },
+        {
+            "abbrev": "HAM",
+            "id": 7,
+            "location": "BACKHAM",
+            "nickname": "Bombers",
+            "owners": [
+                "{156AF54C-0D7A-457B-B1CE-FBB97DC61D42}"
+            ]
+        },
+        {
+            "abbrev": "WIEB",
+            "id": 8,
+            "location": "2021 ",
+            "nickname": "Prospects",
+            "owners": [
+                "{504357FC-4B8A-47E5-A043-B20FBE78C3D3}"
+            ]
+        },
+        {
+            "abbrev": "SLE",
+            "id": 9,
+            "location": "Moustakas",
+            "nickname": "Be Kiddin' Me",
+            "owners": [
+                "{E427F145-0CDC-4689-A24D-2B2751F56F88}"
+            ]
+        },
+        {
+            "abbrev": "NY",
+            "id": 10,
+            "location": "New York",
+            "nickname": "Knights",
+            "owners": [
+                "{C0BD666C-3CD5-4089-B0AD-429AC08B5B17}"
+            ]
+        }
+    ]
+}
