@@ -4,9 +4,10 @@
   "description": "keeper baseball webapp",
   "main": "index.js",
   "scripts": {
-    "dev": "snowpack dev",
+    "snowpack:dev": "snowpack dev",
     "build": "snowpack build",
-    "server": "nodemon server/server.js"
+    "dev": "nodemon server/server.js",
+    "server": "node server/server.js"
   },
   "repository": {
     "type": "git",
