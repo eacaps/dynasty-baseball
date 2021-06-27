@@ -10,5 +10,8 @@ COPY src/ src
 
 # TODO: Need to precompile snowpack too
 RUN npm ci
+RUN npm run build
+
+COPY build/ build
 
 CMD npm run server

@@ -1,6 +1,9 @@
-const express = require('express');
+// const express = require('express');
+import express from 'express';
+
 const router = express.Router();
-const backend = require('./roster/object-roster-backend');
+// const backend = require('./roster/object-roster-backend');
+import backend from './roster/object-roster-backend.js';
 
 router.get('/league/:league_id/team/:team_id/roster/:rev_id?', function(req, res){
     const {league_id,team_id,rev_id} = req.params;
@@ -17,4 +20,5 @@ router.get('/league/:league_id/team/:team_id/roster/:rev_id?', function(req, res
  });
 
 //Routes will go here
-module.exports = router;
+// module.exports = router;
+export default router;
