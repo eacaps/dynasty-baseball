@@ -2,11 +2,13 @@
   "name": "dynasty-baseball",
   "version": "0.0.0",
   "description": "keeper baseball webapp",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "snowpack dev",
+    "snowpack:dev": "snowpack dev",
     "build": "snowpack build",
-    "server": "nodemon server/server.js"
+    "dev": "nodemon server/server.js --dev",
+    "server": "node --inspect server/server.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.7",
+    "minimist": "^1.2.5",
     "nodemon": "^2.0.7",
     "snowpack": "^3.0.11",
     "typescript": "^4.1.3"
