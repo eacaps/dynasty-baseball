@@ -1,5 +1,5 @@
 #!/bin/bash
 TAG=${TAG:-latest}
-PORT=${PORT:-3001}
+PORT=${PORT:-8080}
 
-docker run -p $PORT:3000 eacaps/dynasty-baseball:$TAG
+docker run -p $PORT:8080 eacaps/dynasty-baseball:$TAG

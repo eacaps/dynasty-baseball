@@ -3,4 +3,7 @@ export default {
       public: { url: "/", static: true },
       src: "/",
     },
+    buildOptions: {
+      out: "dist"
+    }
   };
