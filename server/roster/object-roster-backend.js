@@ -36,5 +36,4 @@ class Roster {
 
 const roster = new Roster();
 
-// module.exports = roster;
 export default roster;

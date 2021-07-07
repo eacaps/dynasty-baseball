@@ -1,14 +1,9 @@
-// const express = require('express');
 import express from 'express';
 import bodyParser from 'body-parser';
 import {startServer,createConfiguration} from 'snowpack';
 import api from './api.js';
 import path from 'path';
 import minimist from 'minimist';
-// const bodyParser = require('body-parser');
-
-// const {startServer,createConfiguration } = require('snowpack');
-// const snowpackConfig = require("../snowpack.config.js");
 import snowpackConfig from '../snowpack.config.js';
 
 const config = createConfiguration(snowpackConfig);
@@ -27,7 +22,6 @@ export default async function server () {
 
     app.use(express.json());
 
-    // const api = require('./api.js');
     app.use('/api', api);
 
     if(devServer) {
