@@ -12,6 +12,6 @@ COPY src/ src
 RUN npm ci
 RUN npm run build
 
-COPY build/ build
+COPY dist/ dist
 
 CMD npm run server

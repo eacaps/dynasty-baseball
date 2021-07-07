@@ -18,7 +18,7 @@ export default async function server () {
     }
     
     const app = express();
-    const PORT = process.env.PORT = 3000;
+    const PORT = process.env.PORT = 8080;
 
     app.use(express.json());
 
@@ -36,7 +36,7 @@ export default async function server () {
             }
         });
     } else {
-        app.use(express.static(path.join(process.cwd(), 'build')));
+        app.use(express.static(path.join(process.cwd(), 'dist')));
     }
 
     app.listen(PORT, () => {
